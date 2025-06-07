@@ -5,6 +5,7 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/ishanwardhono/transfer-system/config"
+	handlerhttp "github.com/ishanwardhono/transfer-system/internal/handler/http"
 	"github.com/ishanwardhono/transfer-system/pkg/db"
 )
 
@@ -19,6 +20,8 @@ func NewAppContainer(cfg *config.Config) (*AppContainer, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	handlerhttp.SetupRouter(httpServer)
 
 	return &AppContainer{
 		HTTPServer: httpServer,

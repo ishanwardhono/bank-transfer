@@ -3,41 +3,28 @@ package appcontext
 import (
 	"context"
 
+	"github.com/go-chi/chi/v5/middleware"
 	"github.com/google/uuid"
 )
 
-type ContextContent string
-
 const (
-	RequestID ContextContent = "request_id"
 	//Add here for another context fields
-	AccountID ContextContent = "account_id"
+	AccountID = "account_id"
 )
 
 var (
-	CtxContents = []ContextContent{RequestID, AccountID}
+	CtxContents = []string{middleware.RequestIDHeader, AccountID}
 )
 
-func ContextStory(parent context.Context) context.Context {
-	if parent == nil {
-		parent = context.Background()
-	}
-	return SetCtxRequestID(parent)
-}
-
-func SetCtxRequestID(ctx context.Context) context.Context {
-	return context.WithValue(ctx, RequestID, uuid.New())
-}
-
-func SetCtxVal(ctx context.Context, key ContextContent, val interface{}) context.Context {
+func SetCtxVal(ctx context.Context, key string, val interface{}) context.Context {
 	return context.WithValue(ctx, key, val)
 }
 
-func GetCtxContent(ctx context.Context) map[ContextContent]interface{} {
+func GetCtxContent(ctx context.Context) map[string]interface{} {
 	if ctx == nil {
 		return nil
 	}
-	ctxVal := make(map[ContextContent]interface{})
+	ctxVal := make(map[string]interface{})
 	for _, val := range CtxContents {
 		if v := ctx.Value(val); v != nil {
 			ctxVal[val] = v
