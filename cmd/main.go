@@ -15,7 +15,10 @@ func main() {
 	}
 	logger.Init(cfg.LogLevel)
 
-	appContainer := NewAppContainer()
+	appContainer, err := NewAppContainer(cfg)
+	if err != nil {
+		logger.Fatalf(context.Background(), "Failed to initialize application: %v", err)
+	}
 
 	serverAddress := cfg.GetServerAddress()
 	logger.Printf(context.Background(), "Starting HTTP server on %s", serverAddress)

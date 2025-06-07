@@ -4,17 +4,25 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
+	"github.com/ishanwardhono/transfer-system/config"
+	"github.com/ishanwardhono/transfer-system/pkg/db"
 )
 
 type AppContainer struct {
 	HTTPServer *chi.Mux
 }
 
-func NewAppContainer() *AppContainer {
+func NewAppContainer(cfg *config.Config) (*AppContainer, error) {
 	httpServer := chi.NewRouter()
+
+	_, err := db.NewDatabase(cfg.Database)
+	if err != nil {
+		return nil, err
+	}
+
 	return &AppContainer{
 		HTTPServer: httpServer,
-	}
+	}, nil
 }
 
 func (c *AppContainer) RunHTTPServer(address string) error {

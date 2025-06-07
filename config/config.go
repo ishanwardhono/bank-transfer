@@ -10,6 +10,15 @@ type Config struct {
 	ServerHost string
 	ServerPort string
 	LogLevel   string
+	Database   DatabaseConfig
+}
+
+type DatabaseConfig struct {
+	Host     string
+	Port     string
+	User     string
+	Password string
+	Name     string
 }
 
 func LoadConfig() (*Config, error) {
@@ -28,6 +37,13 @@ func LoadConfig() (*Config, error) {
 		ServerHost: v.GetString("SERVER_HOST"),
 		ServerPort: v.GetString("SERVER_PORT"),
 		LogLevel:   v.GetString("LOG_LEVEL"),
+		Database: DatabaseConfig{
+			Host:     v.GetString("DB_HOST"),
+			Port:     v.GetString("DB_PORT"),
+			User:     v.GetString("DB_USER"),
+			Password: v.GetString("DB_PASSWORD"),
+			Name:     v.GetString("DB_NAME"),
+		},
 	}, nil
 }
 
