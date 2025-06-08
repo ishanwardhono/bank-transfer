@@ -25,7 +25,3 @@ func (r RegisterAccountRequest) ToModel() model.Account {
 		Balance: r.InitialBalance,
 	}
 }
-
-type RegisterAccountResponse struct {
-	ID int64 `json:"id"`
-}

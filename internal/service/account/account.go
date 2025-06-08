@@ -7,14 +7,12 @@ import (
 	"github.com/ishanwardhono/transfer-system/pkg/logger"
 )
 
-func (s *service) Register(ctx context.Context, req dto.RegisterAccountRequest) (dto.RegisterAccountResponse, error) {
+func (s *service) Register(ctx context.Context, req dto.RegisterAccountRequest) error {
 	accountModel := req.ToModel()
 	if err := s.AccountRepo.InsertAccount(ctx, accountModel); err != nil {
 		logger.Errorf(ctx, "failed to insert account, err: %v", err)
-		return dto.RegisterAccountResponse{}, err
+		return err
 	}
 
-	return dto.RegisterAccountResponse{
-		ID: req.AccountID,
-	}, nil
+	return nil
 }

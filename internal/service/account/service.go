@@ -8,7 +8,7 @@ import (
 )
 
 type Service interface {
-	Register(ctx context.Context, req dto.RegisterAccountRequest) (dto.RegisterAccountResponse, error)
+	Register(ctx context.Context, req dto.RegisterAccountRequest) error
 }
 
 type service struct {
