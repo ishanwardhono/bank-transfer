@@ -8,6 +8,7 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
+//go:generate go run go.uber.org/mock/mockgen --source=repo.go --package=mocktransactionrepo --destination=../../../test/mock/repository/transaction/repo.go
 type Repository interface {
 	TxInsertTransaction(ctx context.Context, tx *sqlx.Tx, transaction model.Transaction) error
 }

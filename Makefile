@@ -8,3 +8,12 @@ deploy:
 
 clean:
 	docker-compose down -v
+
+run-test:
+	go mod tidy
+	go generate ./...
+	go test ./...
+
+test-coverage:
+	go test -coverprofile=coverage.out ./...
+	go tool cover -func=coverage.out

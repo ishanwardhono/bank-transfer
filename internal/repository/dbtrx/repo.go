@@ -8,9 +8,11 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
+//go:generate go run go.uber.org/mock/mockgen --source=repo.go --package=mockdbtrxrepo --destination=../../../test/mock/repository/dbtrx/repo.go
 type Repository interface {
 	BeginTx(ctx context.Context) (*sqlx.Tx, error)
 	RollbackTx(ctx context.Context, tx *sqlx.Tx)
+	CommitTx(tx *sqlx.Tx) error
 }
 
 type repository struct {
@@ -36,4 +38,8 @@ func (r *repository) RollbackTx(ctx context.Context, tx *sqlx.Tx) {
 		logger.Errorf(ctx, "failed to rollback transaction, err: %v", rollbackErr)
 	}
 	return
+}
+
+func (r *repository) CommitTx(tx *sqlx.Tx) error {
+	return tx.Commit()
 }

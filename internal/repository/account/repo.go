@@ -13,6 +13,7 @@ import (
 	"github.com/shopspring/decimal"
 )
 
+//go:generate go run go.uber.org/mock/mockgen --source=repo.go --package=mockaccountrepo --destination=../../../test/mock/repository/account/repo.go
 type Repository interface {
 	InsertAccount(ctx context.Context, account model.Account) error
 	GetAccount(ctx context.Context, accountID int64) (model.Account, error)

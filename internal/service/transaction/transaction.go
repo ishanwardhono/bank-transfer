@@ -56,7 +56,7 @@ func (s *service) Transfer(ctx context.Context, req dto.TransferRequest) error {
 		return err
 	}
 
-	if err := tx.Commit(); err != nil {
+	if err := s.dbTrx.CommitTx(tx); err != nil {
 		logger.Errorf(ctx, "failed to commit transaction, err: %v", err)
 		s.dbTrx.RollbackTx(ctx, tx)
 		return err
