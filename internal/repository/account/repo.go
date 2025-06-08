@@ -8,12 +8,15 @@ import (
 	"github.com/ishanwardhono/transfer-system/internal/entity/model"
 	"github.com/ishanwardhono/transfer-system/pkg/db"
 	"github.com/ishanwardhono/transfer-system/pkg/errors"
+	"github.com/jmoiron/sqlx"
 	"github.com/lib/pq"
+	"github.com/shopspring/decimal"
 )
 
 type Repository interface {
 	InsertAccount(ctx context.Context, account model.Account) error
 	GetAccount(ctx context.Context, accountID int64) (model.Account, error)
+	TxUpdateBalance(ctx context.Context, tx *sqlx.Tx, accountID int64, updatedAmount decimal.Decimal) error
 }
 
 type repository struct {
@@ -51,4 +54,27 @@ func (r *repository) GetAccount(ctx context.Context, accountID int64) (model.Acc
 		return account, err
 	}
 	return account, nil
+}
+
+func (r *repository) TxUpdateBalance(ctx context.Context, tx *sqlx.Tx, accountID int64, updatedAmount decimal.Decimal) error {
+	result, err := tx.ExecContext(
+		ctx,
+		updateBalanceQuery,
+		accountID,
+		updatedAmount,
+	)
+	if err != nil {
+		return err
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return err
+	}
+
+	if rowsAffected == 0 {
+		return errors.New(http.StatusNotFound, "account not found")
+	}
+
+	return nil
 }

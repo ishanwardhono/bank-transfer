@@ -6,7 +6,10 @@ import (
 
 	handlerhttp "github.com/ishanwardhono/transfer-system/internal/handler/http"
 	accountrepo "github.com/ishanwardhono/transfer-system/internal/repository/account"
+	"github.com/ishanwardhono/transfer-system/internal/repository/dbtrx"
+	transactionrepo "github.com/ishanwardhono/transfer-system/internal/repository/transaction"
 	accountsvc "github.com/ishanwardhono/transfer-system/internal/service/account"
+	transactionsvc "github.com/ishanwardhono/transfer-system/internal/service/transaction"
 	"github.com/ishanwardhono/transfer-system/pkg/config"
 	"github.com/ishanwardhono/transfer-system/pkg/db"
 )
@@ -21,10 +24,15 @@ func NewAppContainer(cfg *config.Config) (*AppContainer, error) {
 		return nil, err
 	}
 
+	dbtrxRepo := dbtrx.NewRepository(db)
+
 	accountRepo := accountrepo.NewRepository(db)
 	accountService := accountsvc.NewService(accountRepo)
 
-	httpHandler := handlerhttp.NewHandler(accountService)
+	transactionRepo := transactionrepo.NewRepository(db)
+	transactionService := transactionsvc.NewService(dbtrxRepo, transactionRepo, accountRepo)
+
+	httpHandler := handlerhttp.NewHandler(accountService, transactionService)
 	httpRouter := handlerhttp.SetupRouter(httpHandler)
 	httpServer := &http.Server{
 		Addr:    cfg.GetServerAddress(),

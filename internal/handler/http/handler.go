@@ -64,3 +64,30 @@ func (h *Handler) GetAccountById(w http.ResponseWriter, r *http.Request) {
 
 	httphelper.HandleResponse(w, resp)
 }
+
+func (h *Handler) Transfer(w http.ResponseWriter, r *http.Request) {
+	var request dto.TransferRequest
+	ctx := r.Context()
+
+	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
+		logger.Errorf(ctx, "Failed to parse request body, err: %v", err)
+		httphelper.HandleError(w, errors.Wrap(http.StatusBadRequest, err))
+		return
+	}
+	defer r.Body.Close()
+
+	if err := request.Validate(); err != nil {
+		logger.Errorf(ctx, "Failed to validate request body, err: %v", err)
+		httphelper.HandleError(w, errors.Wrap(http.StatusBadRequest, err))
+		return
+	}
+
+	err := h.transferService.Transfer(ctx, request)
+	if err != nil {
+		logger.Errorf(ctx, "Failed to process transfer, err: %v", err)
+		httphelper.HandleError(w, err)
+		return
+	}
+
+	httphelper.HandleResponse(w, nil)
+}

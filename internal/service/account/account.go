@@ -9,7 +9,7 @@ import (
 
 func (s *service) Register(ctx context.Context, req dto.RegisterAccountRequest) error {
 	accountModel := req.ToModel()
-	if err := s.AccountRepo.InsertAccount(ctx, accountModel); err != nil {
+	if err := s.accountRepo.InsertAccount(ctx, accountModel); err != nil {
 		logger.Errorf(ctx, "failed to insert account, err: %v", err)
 		return err
 	}
@@ -18,7 +18,7 @@ func (s *service) Register(ctx context.Context, req dto.RegisterAccountRequest) 
 }
 
 func (s *service) GetById(ctx context.Context, accountId int64) (dto.GetAccountByIdResponse, error) {
-	account, err := s.AccountRepo.GetAccount(ctx, accountId)
+	account, err := s.accountRepo.GetAccount(ctx, accountId)
 	if err != nil {
 		logger.Errorf(ctx, "failed to insert account, err: %v", err)
 		return dto.GetAccountByIdResponse{}, err

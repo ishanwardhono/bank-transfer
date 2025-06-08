@@ -4,6 +4,7 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/ishanwardhono/transfer-system/internal/service/account"
+	"github.com/ishanwardhono/transfer-system/internal/service/transaction"
 	"github.com/ishanwardhono/transfer-system/pkg/httphelper"
 )
 
@@ -15,18 +16,22 @@ func SetupRouter(handler *Handler) *chi.Mux {
 
 	router.Post("/accounts", handler.RegisterAccount)
 	router.Get("/accounts/{accountId}", handler.GetAccountById)
+	router.Post("/transactions", handler.Transfer)
 
 	return router
 }
 
 type Handler struct {
-	accountService account.Service
+	accountService  account.Service
+	transferService transaction.Service
 }
 
 func NewHandler(
 	accountService account.Service,
+	transferService transaction.Service,
 ) *Handler {
 	return &Handler{
-		accountService: accountService,
+		accountService:  accountService,
+		transferService: transferService,
 	}
 }
