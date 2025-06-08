@@ -21,6 +21,8 @@ services:
       timeout: 5s
       retries: 5
       start_period: 10s
+    stop_grace_period: 10s
+    stop_signal: SIGINT
 
   app:
     build:
@@ -36,6 +38,8 @@ services:
       - "8080:8080"
     networks:
       - transfer_system_network
+    stop_grace_period: 60s
+    stop_signal: SIGINT
 
 networks:
   transfer_system_network:

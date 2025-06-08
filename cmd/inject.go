@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
@@ -10,24 +11,32 @@ import (
 )
 
 type AppContainer struct {
-	HTTPServer *chi.Mux
+	HTTPServer *http.Server
 }
 
 func NewAppContainer(cfg *config.Config) (*AppContainer, error) {
-	httpServer := chi.NewRouter()
+	httpRouter := chi.NewRouter()
 
 	_, err := db.NewDatabase(cfg.Database)
 	if err != nil {
 		return nil, err
 	}
 
-	handlerhttp.SetupRouter(httpServer)
+	handlerhttp.SetupRouter(httpRouter)
+	httpServer := &http.Server{
+		Addr:    cfg.GetServerAddress(),
+		Handler: httpRouter,
+	}
 
 	return &AppContainer{
 		HTTPServer: httpServer,
 	}, nil
 }
 
-func (c *AppContainer) RunHTTPServer(address string) error {
-	return http.ListenAndServe(address, c.HTTPServer)
+func (c *AppContainer) Run() error {
+	return c.HTTPServer.ListenAndServe()
+}
+
+func (c *AppContainer) Shutdown(ctx context.Context) error {
+	return c.HTTPServer.Shutdown(ctx)
 }
