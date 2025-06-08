@@ -32,6 +32,7 @@ You can test the API in two ways:
 1. **Using Postman**:
    - Import the provided Postman collection: `transfer-system.postman_collection.json`
    - The collection contains ready-to-use requests for all available endpoints
+   - Sample responses for all endpoints are included in the collection for reference
 
 2. **Direct API Calls**:
    - The API is available at `http://localhost:8080`
@@ -40,6 +41,8 @@ You can test the API in two ways:
 ## Project Overview
 
 The Money Transfer System is a microservice designed to handle money transfers between accounts in a secure and reliable manner. It provides RESTful APIs for account management and transaction processing.
+
+> **Note:** You can follow my step-by-step development process through the commit history of this repository. Each commit is structured to show my thought process, implementation decisions, and iterative improvements to the codebase.
 
 ### Key Features
 
@@ -81,7 +84,7 @@ The system uses two main database tables:
   ```json
   {
     "account_id": 1001,
-    "initial_balance": 1000.50
+    "initial_balance": "1000.50"
   }
   ```
 - **Response**: 201 Created
@@ -93,7 +96,7 @@ The system uses two main database tables:
   ```json
   {
     "account_id": 1001,
-    "balance": 1000.50
+    "balance": "1000.50"
   }
   ```
 
@@ -107,7 +110,7 @@ The system uses two main database tables:
   {
     "source_account_id": 1001,
     "destination_account_id": 1002,
-    "amount": 50.25
+    "amount": "50.25"
   }
   ```
 - **Response**: 200 OK
