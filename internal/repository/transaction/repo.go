@@ -23,21 +23,13 @@ func NewRepository(db *db.Database) Repository {
 }
 
 func (r *repository) TxInsertTransaction(ctx context.Context, tx *sqlx.Tx, transaction model.Transaction) error {
-	var id int64
-	rows, err := r.db.NamedQueryContext(
+	_, err := tx.NamedExecContext(
 		ctx,
 		insertTransactionQuery,
 		transaction,
 	)
 	if err != nil {
 		return err
-	}
-	defer rows.Close()
-
-	if rows.Next() {
-		if err := rows.Scan(&id); err != nil {
-			return err
-		}
 	}
 
 	return nil
