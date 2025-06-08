@@ -7,6 +7,7 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/ishanwardhono/transfer-system/internal/entity/dto"
+	appcontext "github.com/ishanwardhono/transfer-system/pkg/context"
 	"github.com/ishanwardhono/transfer-system/pkg/errors"
 	"github.com/ishanwardhono/transfer-system/pkg/httphelper"
 	"github.com/ishanwardhono/transfer-system/pkg/logger"
@@ -23,6 +24,7 @@ func (h *Handler) RegisterAccount(w http.ResponseWriter, r *http.Request) {
 	}
 	defer r.Body.Close()
 
+	ctx = appcontext.SetAccountID(ctx, request.AccountID)
 	if err := request.Validate(); err != nil {
 		logger.Errorf(ctx, "Failed to validate request body, err: %v", err)
 		httphelper.HandleError(w, errors.Wrap(http.StatusBadRequest, err))
@@ -55,6 +57,7 @@ func (h *Handler) GetAccountById(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	ctx = appcontext.SetAccountID(ctx, accountId)
 	resp, err := h.accountService.GetById(ctx, accountId)
 	if err != nil {
 		logger.Errorf(ctx, "Failed to register account, err: %v", err)
@@ -76,6 +79,7 @@ func (h *Handler) Transfer(w http.ResponseWriter, r *http.Request) {
 	}
 	defer r.Body.Close()
 
+	ctx = appcontext.SetAccountID(ctx, request.SourceAccountID)
 	if err := request.Validate(); err != nil {
 		logger.Errorf(ctx, "Failed to validate request body, err: %v", err)
 		httphelper.HandleError(w, errors.Wrap(http.StatusBadRequest, err))
