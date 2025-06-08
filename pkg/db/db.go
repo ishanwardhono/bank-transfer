@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/ishanwardhono/transfer-system/config"
+	"github.com/ishanwardhono/transfer-system/pkg/config"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
 )

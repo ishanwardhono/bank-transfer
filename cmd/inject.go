@@ -4,10 +4,10 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/ishanwardhono/transfer-system/config"
 	handlerhttp "github.com/ishanwardhono/transfer-system/internal/handler/http"
 	accountrepo "github.com/ishanwardhono/transfer-system/internal/repository/account"
 	accountsvc "github.com/ishanwardhono/transfer-system/internal/service/account"
+	"github.com/ishanwardhono/transfer-system/pkg/config"
 	"github.com/ishanwardhono/transfer-system/pkg/db"
 )
 
