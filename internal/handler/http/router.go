@@ -14,6 +14,7 @@ func SetupRouter(handler *Handler) *chi.Mux {
 	router.Use(httphelper.LoggerMiddleware)
 
 	router.Post("/accounts", handler.RegisterAccount)
+	router.Get("/accounts/{accountId}", handler.GetAccountById)
 
 	return router
 }

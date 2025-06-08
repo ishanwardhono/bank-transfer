@@ -18,17 +18,17 @@ type ErrorResponse struct {
 }
 
 func HandleResponse(w http.ResponseWriter, data interface{}) {
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	if data != nil {
-		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(data)
 	}
 }
 
 func HandleCreatedResponse(w http.ResponseWriter, data interface{}) {
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
 	if data != nil {
-		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(data)
 	}
 }

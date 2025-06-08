@@ -25,3 +25,15 @@ func (r RegisterAccountRequest) ToModel() model.Account {
 		Balance: r.InitialBalance,
 	}
 }
+
+type GetAccountByIdResponse struct {
+	AccountID int64           `json:"account_id"`
+	Balance   decimal.Decimal `json:"balance"`
+}
+
+func FromModelAccount(account model.Account) GetAccountByIdResponse {
+	return GetAccountByIdResponse{
+		AccountID: account.ID,
+		Balance:   account.Balance,
+	}
+}

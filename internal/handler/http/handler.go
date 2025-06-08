@@ -3,7 +3,9 @@ package http
 import (
 	"encoding/json"
 	"net/http"
+	"strconv"
 
+	"github.com/go-chi/chi/v5"
 	"github.com/ishanwardhono/transfer-system/internal/entity/dto"
 	"github.com/ishanwardhono/transfer-system/pkg/errors"
 	"github.com/ishanwardhono/transfer-system/pkg/httphelper"
@@ -35,4 +37,30 @@ func (h *Handler) RegisterAccount(w http.ResponseWriter, r *http.Request) {
 	}
 
 	httphelper.HandleCreatedResponse(w, nil)
+}
+
+func (h *Handler) GetAccountById(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+
+	accountIdStr := chi.URLParam(r, "accountId")
+	if accountIdStr == "" {
+		logger.Errorf(ctx, "Missing account ID in request")
+		httphelper.HandleError(w, errors.New(http.StatusBadRequest, "Missing account ID"))
+		return
+	}
+	accountId, err := strconv.ParseInt(accountIdStr, 10, 64)
+	if err != nil {
+		logger.Errorf(ctx, "Invalid account ID format: %v", err)
+		httphelper.HandleError(w, errors.Wrap(http.StatusBadRequest, err))
+		return
+	}
+
+	resp, err := h.accountService.GetById(ctx, accountId)
+	if err != nil {
+		logger.Errorf(ctx, "Failed to register account, err: %v", err)
+		httphelper.HandleError(w, err)
+		return
+	}
+
+	httphelper.HandleResponse(w, resp)
 }

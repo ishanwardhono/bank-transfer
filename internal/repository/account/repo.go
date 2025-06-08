@@ -2,6 +2,7 @@ package account
 
 import (
 	"context"
+	"database/sql"
 	"net/http"
 
 	"github.com/ishanwardhono/transfer-system/internal/entity/model"
@@ -12,6 +13,7 @@ import (
 
 type Repository interface {
 	InsertAccount(ctx context.Context, account model.Account) error
+	GetAccount(ctx context.Context, accountID int64) (model.Account, error)
 }
 
 type repository struct {
@@ -37,4 +39,16 @@ func (r *repository) InsertAccount(ctx context.Context, account model.Account) e
 		return err
 	}
 	return err
+}
+
+func (r *repository) GetAccount(ctx context.Context, accountID int64) (model.Account, error) {
+	var account model.Account
+	err := r.db.GetContext(ctx, &account, getAccountQuery, accountID)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return model.Account{}, errors.New(http.StatusNotFound, "account not found")
+		}
+		return account, err
+	}
+	return account, nil
 }

@@ -9,6 +9,7 @@ import (
 
 type Service interface {
 	Register(ctx context.Context, req dto.RegisterAccountRequest) error
+	GetById(ctx context.Context, accountId int64) (dto.GetAccountByIdResponse, error)
 }
 
 type service struct {

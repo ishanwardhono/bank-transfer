@@ -16,3 +16,14 @@ func (s *service) Register(ctx context.Context, req dto.RegisterAccountRequest) 
 
 	return nil
 }
+
+func (s *service) GetById(ctx context.Context, accountId int64) (dto.GetAccountByIdResponse, error) {
+	account, err := s.AccountRepo.GetAccount(ctx, accountId)
+	if err != nil {
+		logger.Errorf(ctx, "failed to insert account, err: %v", err)
+		return dto.GetAccountByIdResponse{}, err
+	}
+
+	resp := dto.FromModelAccount(account)
+	return resp, nil
+}
