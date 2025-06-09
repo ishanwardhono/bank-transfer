@@ -10,8 +10,8 @@ clean:
 	docker-compose down -v
 
 run-test:
-	go mod tidy
 	go generate ./...
+	go mod tidy
 	go test ./...
 
 test-coverage:
