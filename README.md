@@ -87,18 +87,26 @@ The system uses two main database tables:
     "initial_balance": "1000.50"
   }
   ```
-- **Response**: 201 Created
+- **Response**: 
+  - **Success**: 201 Created
+  - **Error Responses**:
+    - 400 Bad Request - Account already exists or validation failures
+    - 500 Internal Server Error - Server-side issues
 
 #### Get Account Information
 - **Endpoint**: `GET /accounts/{accountId}`
 - **Description**: Retrieves account information by ID
 - **Response**:
-  ```json
-  {
-    "account_id": 1001,
-    "balance": "1000.50"
-  }
-  ```
+  - **Success**: 200 OK
+    ```json
+    {
+      "account_id": 1001,
+      "balance": "1000.50"
+    }
+    ```
+  - **Error Responses**:
+    - 400 Bad Request - Invalid account ID format
+    - 404 Not Found - Account not found
 
 ### Transactions
 
@@ -113,7 +121,11 @@ The system uses two main database tables:
     "amount": "50.25"
   }
   ```
-- **Response**: 200 OK
+- **Response**: 
+  - **Success**: 200 OK
+  - **Error Responses**:
+    - 400 Bad Request - Amount validation or insufficient balance
+    - 404 Not Found - Source or destination account not found
 
 ## Technical Implementation Details
 
