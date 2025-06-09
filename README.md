@@ -173,8 +173,8 @@ transfer-system/
 │   ├── handler/           # HTTP handlers
 │   ├── repository/        # Data access layer
 │   └── service/           # Business logic
-│       ├── account/       # Account service with 100% test coverage
-│       └── transaction/   # Transaction service with 100% test coverage
+│       ├── account/       # Account service
+│       └── transaction/   # Transaction service
 ├── pkg/                   # Reusable packages
 │   ├── config/            # Configuration
 │   ├── context/           # Context utilities
