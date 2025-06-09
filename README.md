@@ -125,7 +125,42 @@ The system uses database transactions to ensure data integrity during money tran
 
 The application implements a graceful shutdown mechanism that handles server stop signals properly. When shutdown is initiated, the server stops accepting new requests but allows in-progress transfers to complete, preventing data corruption and dangling database transactions (which could cause db locking) during system restarts.
 
+### Context-Based Logging
+
+The application implements a sophisticated context-based logging system that propagates request and account identifiers throughout the entire request lifecycle. This makes debugging and request tracing straightforward:
+
+- Each request receives a unique `request_id` that flows through all log entries
+- The `account_id` is extracted from requests and attached to the context
+- All log entries include these contextual identifiers for easy correlation
+
+Example log output:
+```json
+{"context":{"account_id":95,"request_id":"57caf02c18e6/0arzSQj4Go-000006"},"level":"error","msg":"failed to insert account, err: dial tcp: lookup postgres on 127.0.0.11:53: no such host","source":"/app/internal/service/account/account.go:23","time":"2025-06-09T00:09:39Z"}
+{"context":{"account_id":95,"request_id":"57caf02c18e6/0arzSQj4Go-000006"},"level":"error","msg":"Failed to register account, err: dial tcp: lookup postgres on 127.0.0.11:53: no such host","source":"/app/internal/handler/http/handler.go:63","time":"2025-06-09T00:09:39Z"}
+{"context":{"request_id":"57caf02c18e6/0arzSQj4Go-000006"},"level":"error","msg":"Request: GET /accounts/95 - 500 | 109.335417ms | 192.168.65.1:57251","source":"/app/pkg/httphelper/helper.go:76","time":"2025-06-09T00:09:39Z"}
+```
+
+This approach enables efficient debugging and monitoring, as related log entries can be easily identified and filtered by their context identifiers.
+
 ## Development
+
+### Testing
+
+The service layer is thoroughly tested with unit tests, achieving 100% code coverage in service layer. This ensures reliability and correctness of the business logic handling account operations and money transfers.
+
+- All service components have accompanying `_test.go` files
+- Test mocks are generated with mockgen in the `test/mock` directory
+- Database operations are mocked to isolate service layer logic
+
+To run the tests:
+
+```bash
+# Run all tests
+make run-test
+
+# Run tests with coverage report
+make test-coverage
+```
 
 ### Project Structure
 
@@ -138,6 +173,8 @@ transfer-system/
 │   ├── handler/           # HTTP handlers
 │   ├── repository/        # Data access layer
 │   └── service/           # Business logic
+│       ├── account/       # Account service with 100% test coverage
+│       └── transaction/   # Transaction service with 100% test coverage
 ├── pkg/                   # Reusable packages
 │   ├── config/            # Configuration
 │   ├── context/           # Context utilities
